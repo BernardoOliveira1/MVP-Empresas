@@ -1,0 +1,30 @@
+## list empresas
+GET http://localhost:3000/empresas
+###
+## get empresa
+GET http://localhost:3000/empresas/1
+###
+## create empresa
+POST http://localhost:3000/empresas
+Content-Type: application/json
+
+{
+    "name": "Paper Street Co",
+    "cnpj": "00000000000000",
+    "address": "Av. Paulista, 1000",
+    "fantasyName": "Paper Street Co",
+    "createdAt": "2022-01-01T00:00:00.000Z",
+    "updatedAt": "2022-01-01T00:00:00.000Z"
+}
+###
+## update empresa
+PATCH http://localhost:3000/empresas/9
+Content-Type: application/json
+
+{
+    "name": "Paper Street LTDA"
+}
+
+###
+## delete empresa
+DELETE http://localhost:3000/empresas/2

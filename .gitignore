@@ -1,0 +1,31 @@
+# Node modules de qualquer subpasta
+node_modules/
+
+# Builds comuns
+dist/
+build/
+
+# Variáveis de ambiente (qualquer .env em qualquer lugar)
+*.env
+*.env.local
+*.env.development
+*.env.production
+*.env.test
+
+# Banco de dados SQLite
+*.sqlite
+*.sqlite3
+
+# Sistema / OS
+.DS_Store
+Thumbs.db
+
+# Logs (qualquer subpasta)
+*.log
+
+# Diretórios temporários
+tmp/
+temp/
+
+# Coverage global
+coverage/
