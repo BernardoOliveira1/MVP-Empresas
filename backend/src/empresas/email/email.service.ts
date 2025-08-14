@@ -5,9 +5,7 @@ import { MailerService } from '@nestjs-modules/mailer';
 export class EmailService {
   constructor(private readonly mailerService: MailerService) {}
 
-  // eslint-disable-next-line @typescript-eslint/require-await
   async sendNewCompanyNotification(empresa: Empresa) {
-    //TODO: error handling se necessário
     const emailRecipient = [
       'bernardo.rocha.oliveira@gmail.com',
       'bernardooliveira@kpmg.com.br',
