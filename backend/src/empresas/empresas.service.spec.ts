@@ -12,8 +12,14 @@ describe('EmpresasService', () => {
     create: jest.fn((empresaDto) => empresaDto),
     save: jest.fn((empresaDto) => Promise.resolve({ id: 1, ...empresaDto })),
     find: jest.fn(() => Promise.resolve([{ id: 1, name: 'Empresa X' }])),
-    findOneBy: jest.fn((id: number): Promise<Empresa | null> => {
-      return Promise.resolve({ id: id, name: 'Empresa X' } as Empresa);
+    findOneBy: jest.fn((): Promise<Empresa | null> => {
+      return Promise.resolve({
+        id: 1,
+        name: 'Empresa Teste',
+        cnpj: '1234567890',
+        fantasyName: 'Empresa Teste',
+        address: 'Rua Teste',
+      } as Empresa);
     }),
     merge: jest.fn((entity, dto) => Object.assign(entity, dto)),
     remove: jest.fn((entity) => Promise.resolve(entity)),
@@ -39,7 +45,7 @@ describe('EmpresasService', () => {
     expect(service).toBeDefined();
   });
 
-  it.only('should create an Empresa record and return it (and send email)', async () => {
+  it('should create an Empresa record and return it (and send email)', async () => {
     const createEmpresaDto = {
       name: 'Empresa Teste',
       cnpj: '1234567890',
@@ -66,7 +72,13 @@ describe('EmpresasService', () => {
 
   it('should return one empresa by id', async () => {
     const result = await service.findOne(1);
-    expect(result).toEqual({ id: 1, name: 'Empresa X' });
+    expect(result).toEqual({
+      id: 1,
+      name: 'Empresa Teste',
+      cnpj: '1234567890',
+      fantasyName: 'Empresa Teste',
+      address: 'Rua Teste',
+    });
   });
 
   it('should return null when updating non-existent empresa', async () => {
@@ -77,7 +89,13 @@ describe('EmpresasService', () => {
 
   it('should remove an existing empresa', async () => {
     const result = await service.remove(1);
-    expect(result).toEqual({ id: 1, name: 'Empresa X' });
+    expect(result).toEqual({
+      id: 1,
+      name: 'Empresa Teste',
+      cnpj: '1234567890',
+      fantasyName: 'Empresa Teste',
+      address: 'Rua Teste',
+    });
   });
 
   it('should return null when removing non-existent empresa', async () => {
