@@ -4,17 +4,23 @@ import { UpdateEmpresaDto } from './dto/update-empresa.dto';
 import { Repository } from 'typeorm';
 import { Empresa } from './entities/empresa.entity';
 import { InjectRepository } from '@nestjs/typeorm';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 
 @Injectable()
 export class EmpresasService {
   constructor(
     @InjectRepository(Empresa)
     private readonly repository: Repository<Empresa>,
+    private readonly eventEmitter: EventEmitter2,
   ) {}
 
-  create(dto: CreateEmpresaDto) {
+  async create(dto: CreateEmpresaDto) {
     const empresa = this.repository.create(dto);
-    return this.repository.save(empresa);
+    const saved = await this.repository.save(empresa);
+
+    //? ENVIO DESACOPLADO DO MÉTODO CREATE (MANTÉM RESTFUL E MAIS LIMPO)
+    this.eventEmitter.emit('empresa.created', saved);
+    return saved;
   }
 
   findAll() {

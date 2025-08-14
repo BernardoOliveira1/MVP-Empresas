@@ -3,6 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { EmpresasService } from './empresas.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Empresa } from './entities/empresa.entity';
+import { EventEmitter2 } from '@nestjs/event-emitter';
 
 describe('EmpresasService', () => {
   let service: EmpresasService;
@@ -17,6 +18,7 @@ describe('EmpresasService', () => {
     merge: jest.fn((entity, dto) => Object.assign(entity, dto)),
     remove: jest.fn((entity) => Promise.resolve(entity)),
   };
+  const mockEventEmitter = { emit: jest.fn() };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -26,6 +28,7 @@ describe('EmpresasService', () => {
           provide: getRepositoryToken(Empresa),
           useValue: mockEmpresaRepository,
         },
+        { provide: EventEmitter2, useValue: mockEventEmitter },
       ],
     }).compile();
 
@@ -36,7 +39,7 @@ describe('EmpresasService', () => {
     expect(service).toBeDefined();
   });
 
-  it('should create an Empresa record and return it', async () => {
+  it.only('should create an Empresa record and return it (and send email)', async () => {
     const createEmpresaDto = {
       name: 'Empresa Teste',
       cnpj: '1234567890',
@@ -50,6 +53,10 @@ describe('EmpresasService', () => {
         id: expect.any(Number),
         ...createEmpresaDto,
       }),
+    );
+    expect(mockEventEmitter.emit).toHaveBeenCalledWith(
+      'empresa.created',
+      expect.objectContaining({ ...createEmpresaDto }),
     );
   });
   it('should return all empresas', async () => {
