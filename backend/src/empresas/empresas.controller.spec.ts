@@ -1,12 +1,13 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 import { Test, TestingModule } from '@nestjs/testing';
 import { EmpresasController } from './empresas.controller';
 import { EmpresasService } from './empresas.service';
+import { NotFoundException } from '@nestjs/common';
 
 describe('EmpresasController', () => {
   let controller: EmpresasController;
   const mockEmpresaService = jest.fn().mockImplementation(() => ({
     create: jest.fn((dto) => {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
       return {
         id: 1,
         ...dto,
@@ -14,18 +15,43 @@ describe('EmpresasController', () => {
         updatedAt: new Date(),
       };
     }),
-    findAll: jest.fn(),
-    findOne: jest.fn(),
-    update: jest.fn((id: number, dto) => {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+    findAll: jest.fn(() => [
+      {
+        id: 1,
+        nome: 'Empresa 1',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+      {
+        id: 2,
+        nome: 'Empresa 2',
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      },
+    ]),
+
+    findOne: jest.fn((id: number) => {
+      if (+id === 1)
+        return {
+          id: 1,
+          nome: 'Empresa 1',
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        };
+      throw new NotFoundException();
+    }),
+    update: jest.fn((id: string, dto) => {
       return {
-        id: id,
+        id: +id,
         ...dto,
         createdAt: new Date(),
         updatedAt: new Date(),
       };
     }),
-    remove: jest.fn(),
+    remove: jest.fn((id: string) => {
+      if (+id === 1) return { id: +id };
+      throw new NotFoundException();
+    }),
   }));
 
   beforeEach(async () => {
@@ -77,6 +103,51 @@ describe('EmpresasController', () => {
           ...updateEmpresaDto,
         }),
       );
+    });
+  });
+  describe('findAll', () => {
+    it('should return an array of empresas', async () => {
+      const result = await controller.findAll();
+      expect(result).toEqual([
+        expect.objectContaining({ id: 1, nome: 'Empresa 1' }),
+        expect.objectContaining({ id: 2, nome: 'Empresa 2' }),
+      ]);
+    });
+  });
+
+  describe('findOne', () => {
+    const idPassed = '1';
+    const idNotPassed = '2';
+
+    it('should return a single Empresa when it exists', async () => {
+      const result = await controller.findOne(idPassed);
+      expect(result).toEqual(
+        expect.objectContaining({ id: 1, nome: 'Empresa 1' }),
+      );
+    });
+
+    it('should throw NotFoundException when Empresa does not exist', async () => {
+      try {
+        await controller.findOne(idNotPassed);
+      } catch (error) {
+        expect(error).toBeInstanceOf(NotFoundException);
+      }
+    });
+  });
+
+  describe('remove', () => {
+    const idPassed = '1';
+    const idNotPassed = '2';
+    it('should remove a Empresa that exist', async () => {
+      const result = await controller.remove(idPassed);
+      expect(result).toBeUndefined();
+    });
+    it('should throw an error when trying to remove a Empresa that does not exist', async () => {
+      try {
+        await controller.remove(idNotPassed);
+      } catch (error) {
+        expect(error).toBeInstanceOf(NotFoundException);
+      }
     });
   });
 });
