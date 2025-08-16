@@ -13,12 +13,9 @@ export default function EmpresaForm({ onSubmit, empresa }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log("cnpjTouched: ", cnpjTouched);
     setCnpjTouched(true);
-    console.log("cnpjTouched: ", cnpjTouched);
 
     if (!isValidCnpj(formData.cnpj)) return;
-    console.log("FormData: ", formData);
 
     onSubmit(formData);
   };
