@@ -89,6 +89,7 @@ describe('EmpresasController', () => {
   });
   describe('update', () => {
     const id = '2';
+    const idNotPassed = '999';
     const updateEmpresaDto = {
       name: 'Empresa Teste',
       cnpj: '1234567890',
@@ -103,6 +104,13 @@ describe('EmpresasController', () => {
           ...updateEmpresaDto,
         }),
       );
+    });
+    it('should throw an error when trying to update a Empresa that does not exist', async () => {
+      try {
+        await controller.update(idNotPassed,updateEmpresaDto);
+      } catch (error) {
+        expect(error).toBeInstanceOf(NotFoundException);
+      }
     });
   });
   describe('findAll', () => {

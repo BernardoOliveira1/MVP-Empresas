@@ -45,7 +45,7 @@ describe('EmpresasService', () => {
     expect(service).toBeDefined();
   });
 
-  it('should create an Empresa record and return it (and send email)', async () => {
+  it('should create an Empresa record and return it (and emit event of empresa.created)', async () => {
     const createEmpresaDto = {
       name: 'Empresa Teste',
       cnpj: '1234567890',
