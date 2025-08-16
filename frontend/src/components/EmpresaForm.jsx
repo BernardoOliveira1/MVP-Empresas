@@ -1,4 +1,6 @@
 import { useState } from "react";
+import CnpjInput from "./CNPJInput";
+import { isValidCnpj } from "../utils/cnpj-utils.ts";
 
 export default function EmpresaForm({ onSubmit, empresa }) {
   const [formData, setFormData] = useState({
@@ -7,17 +9,25 @@ export default function EmpresaForm({ onSubmit, empresa }) {
     fantasyName: empresa?.fantasyName || "",
     address: empresa?.address || "",
   });
+  const [cnpjTouched, setCnpjTouched] = useState(false);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log("cnpjTouched: ", cnpjTouched);
+    setCnpjTouched(true);
+    console.log("cnpjTouched: ", cnpjTouched);
+
+    if (!isValidCnpj(formData.cnpj)) return;
+    console.log("FormData: ", formData);
+
+    onSubmit(formData);
+  };
 
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    onSubmit(formData);
   };
 
   return (
@@ -36,12 +46,13 @@ export default function EmpresaForm({ onSubmit, empresa }) {
 
       <div className="mb-3">
         <label className="form-label">CNPJ</label>
-        <input
-          type="text"
+        <CnpjInput
           className="form-control"
           name="cnpj"
           value={formData.cnpj}
-          onChange={handleChange}
+          onChange={(e) => setFormData({ ...formData, cnpj: e.target.value })}
+          touched={cnpjTouched}
+          onBlur={() => setCnpjTouched(true)}
           required
         />
       </div>
