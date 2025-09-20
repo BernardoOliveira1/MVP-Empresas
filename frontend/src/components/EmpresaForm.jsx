@@ -16,7 +16,6 @@ export default function EmpresaForm({ onSubmit, empresa }) {
     setCnpjTouched(true);
 
     if (!isValidCnpj(formData.cnpj)) return;
-
     onSubmit(formData);
   };
 

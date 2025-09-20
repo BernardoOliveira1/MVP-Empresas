@@ -36,8 +36,12 @@ import { join } from 'path';
       },
     }),
     TypeOrmModule.forRoot({
-      type: 'sqlite',
-      database: 'db.sqlite',
+      type: 'postgres',
+      host: 'db',              // nome do serviço do docker-compose
+      port: 5432,
+      username: 'postgres',
+      password: 'postgres',
+      database: 'mydb',
       entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
     }),
@@ -47,4 +51,4 @@ import { join } from 'path';
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }

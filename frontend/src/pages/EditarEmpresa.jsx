@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import api from "../services/api";
 import EmpresaForm from "../components/EmpresaForm";
 
+
 export default function EditarEmpresa() {
   const { id } = useParams();
   const navigate = useNavigate();

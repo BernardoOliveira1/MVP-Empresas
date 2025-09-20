@@ -1,0 +1,19 @@
+# Dependências (não precisamos copiar, o container instala as dele)
+node_modules
+
+# Build output
+dist
+
+# Logs
+*.log
+logs
+
+# Configs de IDE/editor
+.vscode
+.idea
+.DS_Store
+
+# Arquivos temporários
+*.tmp
+*.swp
+*.swo

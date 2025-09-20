@@ -1,0 +1,31 @@
+version: '3.8'
+services: ## Cada serviço um container
+  api: ## Nome do serviço, pode ser qualquer coisa
+    build: .  ## Ele vai usar o Dockerfile que está no diretório atual (.) para construir a imagem da API.
+    container_name: mvp-api ## Nome fixo dado ao container (senão o Docker gera um aleatório).
+    ports:
+      - "3000:3000" ## porta 3000 do host (sua máquina) é redirecionada para a porta 3000 dentro do container.
+    depends_on: ## Indica pro Docker subir o db antes da api
+      - db
+    environment: ## Define variáveis de ambiente disponíveis dentro do container da API
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASS=postgres
+      - DB_NAME=mydb
+
+  db:
+    image: postgres:15 ## vai baixar e rodar a imagem oficial do Postgres na versão 15.
+    container_name: postgres-db 
+    restart: always ## se o container cair, o Docker tenta reiniciar. mesmo após reboot da máquina.
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: mydb ## cria o usuário postgres com senha postgres e um banco chamado mydb.
+    ports:
+      - "5432:5432" ## porta 5432 do host (sua máquina) é redirecionada para a porta 5432 dentro do container. Assim você pode conectar no banco usando localhost:5432 pelo seu computador
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:
